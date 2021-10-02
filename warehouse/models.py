@@ -1,4 +1,5 @@
 from django.db import models
+import shortuuid
 
 
 class Category(models.Model):
@@ -24,7 +25,7 @@ class Manufacturer(models.Model):
 
 
 class Product(models.Model):
-    code = models.CharField(max_length=8, unique=True, verbose_name='Код товара')
+    code = models.CharField(primary_key=True, default=shortuuid.ShortUUID().random(8), editable=False, max_length=8, unique=True, verbose_name='Код товара')
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.PROTECT)
     manufacturer = models.ForeignKey(Manufacturer, verbose_name='Производитель', on_delete=models.PROTECT, related_name='products')
     quantity = models.PositiveIntegerField(verbose_name='Количество')
