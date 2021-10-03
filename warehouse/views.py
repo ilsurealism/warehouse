@@ -2,11 +2,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from django.views.generic.detail import DetailView
 
-from .models import Product
-from .serializers import ProductSerializer, ProductDetailSerializer
+from .models import Product, Category, Manufacturer
+from .serializers import ProductSerializer, ProductDetailSerializer, CategorySerializer, ManufacturerSerializer
 
 
 def index(request):
@@ -23,6 +23,7 @@ class ProductDetail(DetailView):
     slug_field = 'code'
 
 
+# API
 @api_view(['GET'])
 def api_products(request):
     if request.method == 'GET':
@@ -44,6 +45,56 @@ def product_detail(request, code):
     if request.method == 'GET':
         serializer = ProductDetailSerializer(product)
         return Response(serializer.data)
+
+
+class CreateProductAPIView(CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductDetailSerializer
+
+
+
+class UpdateProductAPIView(UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductDetailSerializer
+    lookup_url_kwarg = 'code'
+    lookup_field = 'code'
+
+
+class DeleteProductAPIView(DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductDetailSerializer
+    lookup_url_kwarg = 'code'
+    lookup_field = 'code'
+
+
+class CreateCategoryAPIView(CreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class UpdateCategoryAPIView(UpdateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class DeleteCategoryAPIView(DestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CreateManufacturerAPIView(CreateAPIView):
+    queryset = Manufacturer.objects.all()
+    serializer_class = ManufacturerSerializer
+
+
+class UpdateManufacturerAPIView(UpdateAPIView):
+    queryset = Manufacturer.objects.all()
+    serializer_class = ManufacturerSerializer
+
+
+class DeleteManufacturerAPIView(DestroyAPIView):
+    queryset = Manufacturer.objects.all()
+    serializer_class = ManufacturerSerializer
 
 
 class ProductsByCategoryList(ListAPIView):
